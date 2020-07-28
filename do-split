@@ -1,0 +1,60 @@
+
+#myfile=epvars90m_ChiLoopOnly_2015.Loop_short-100k.csv
+myfile=epvars90m_ChiLoopOnly_2015.Loop_short-1M.csv
+
+#Example: 
+#   cut  -d','     -f 1 epvars90m_ChiLoopOnly_2015.Loop_short-100k.csv  >  col-1
+
+mycol=1  ;   cut  -d','  -f${mycol}  ${myfile} > col-${mycol}                                           #=> col-1 <== oid 
+# time: 
+#mycol=2  ;   cut  -d','  -f${mycol}  ${myfile}  | sed -ne  "s/_/ /p"    > col-${mycol}
+mycol=2  ;   cut  -d','  -f${mycol}  ${myfile}  | sed -ne   '/time/p' -ne  "s/_/ /p"      | awk '{printf("\"%s\"\n",$0)}'       > col-${mycol}     #   "time"
+#mycol=2  ;   cut  -d','  -f${mycol}  ${myfile} > col-${mycol}                                          #=> col-2 <== "time" 
+mycol=3  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-3 <== "lat" 
+mycol=4  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-4 <== "lon" 
+#mycol=5  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-5 <== "temp_K" 
+mycol=5  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("%s\n",$1)}'        > col-${mycol}     #=> col-5 <== "temp_K" 
+mycol=6  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-6 <== "dewpt_K" 
+mycol=7  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-7 <== "RH_pct" 
+#mycol=8  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-8 <== "pres_Pa" 
+mycol=8  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-8 <== "pres_Pa" 
+mycol=9  ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-9 <== "RadDir_Wm-2"
+mycol=10 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-10 <== "RadDif_Wm-2" 
+mycol=11 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-11 <== "Longwave_Wm-2" 
+mycol=12 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-12 <== "ShortwaveNorm_Wm-2" 
+mycol=13 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-13 <== "Shortwave_Wm-2" 
+mycol=14 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-14 <== "WindDir_deg" 
+#mycol=15 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-15 <== "WindSpd_ms-1" 
+mycol=15 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("%s\n",$1)}'    > col-${mycol}     #=> col-15 <== "WindSpd_ms-1" 
+#mycol=16 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("\"%s\"\n",$1)}'    > col-${mycol}     #=> col-16 <== "RainDpth_mm"           
+mycol=16 ;   cut  -d','  -f${mycol}  ${myfile}    | awk '{printf("%s\n",$1)}'    > col-${mycol}     #=> col-16 <== "RainDpth_mm"           
+
+
+
+
+#
+# make blocks and combine them
+#  
+ paste  col-1 col-2 col-5   |tail -n+2   | awk '{printf("%d,1001,%s %s,%s\n",$1,$2,$3,$4)}'   > block-1001
+ paste  col-1 col-2 col-15  |tail -n+2   | awk '{printf("%d,1002,%s %s,%s\n",$1,$2,$3,$4)}'   > block-1002
+ paste  col-1 col-2 col-16  |tail -n+2   | awk '{printf("%d,1003,%s %s,%s\n",$1,$2,$3,$4)}'   > block-1003
+ cat block-1001 block-1002  block-1003 >  combined-blocks.csv 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
